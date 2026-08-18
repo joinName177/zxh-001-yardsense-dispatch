@@ -1,0 +1,14 @@
+{
+  "project_id": "zxh-001-yardsense-dispatch",
+  "bug_id": "zxh-001-stale-assignment-conflict",
+  "generator_model": "GPT-5 Codex runtime",
+  "bug_author_model": "GPT-5 Codex runtime",
+  "gold_author_model": "GPT-5 Codex runtime",
+  "project_root": "/Users/chengzhiqiang/Documents/20260818/zxh/zxh-001-yardsense-dispatch",
+  "verify_cmds": "go test ./internal/httpapi -run '^TestAssignReturnsConflictWhenTicketWasUpdated$' -count=1",
+  "preflight": {
+    "bug_base_red_runs": 20,
+    "gold_green_runs": 20,
+    "persistence_reopen_test": "passed"
+  }
+}
