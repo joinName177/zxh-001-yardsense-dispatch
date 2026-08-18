@@ -60,6 +60,7 @@ func (t Ticket) ValidateForCreate() error {
 
 func (t Ticket) Clone() Ticket {
 	copy := t
+	copy.Tags = append([]string(nil), t.Tags...)
 	return copy
 }
 
