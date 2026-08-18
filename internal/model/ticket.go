@@ -60,7 +60,17 @@ func (t Ticket) ValidateForCreate() error {
 
 func (t Ticket) Clone() Ticket {
 	copy := t
+	copy.Tags = cloneStrings(t.Tags)
 	return copy
+}
+
+func cloneStrings(values []string) []string {
+	if len(values) == 0 {
+		return nil
+	}
+	clone := make([]string, len(values))
+	copy(clone, values)
+	return clone
 }
 
 func (t Ticket) IsOverdue(now time.Time) bool {

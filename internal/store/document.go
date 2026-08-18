@@ -27,7 +27,7 @@ func (d Document) Clone() Document {
 	copy := NewDocument()
 	copy.Version, copy.UpdatedAt = d.Version, d.UpdatedAt
 	for id, ticket := range d.Tickets {
-		copy.Tickets[id] = ticket
+		copy.Tickets[id] = ticket.Clone()
 	}
 	for id, worker := range d.Workers {
 		copy.Workers[id] = worker.Clone()
