@@ -99,7 +99,7 @@ func (s *JSONStore) UpdateTicket(id string, expectedRevision int64, mutate func(
 	}
 	if ticket.Revision != expectedRevision {
 		conflict := &RevisionConflictError{TicketID: id, Expected: expectedRevision, Actual: ticket.Revision}
-		return model.Ticket{}, fmt.Errorf("update ticket rejected: %v", conflict)
+		return model.Ticket{}, fmt.Errorf("update ticket rejected: %w", conflict)
 	}
 	updated := ticket.Clone()
 	if err := mutate(&updated); err != nil {
