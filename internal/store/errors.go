@@ -22,6 +22,8 @@ func (e *RevisionConflictError) Error() string {
 	return fmt.Sprintf("ticket %s changed from revision %d to %d", e.TicketID, e.Expected, e.Actual)
 }
 
+func (e *RevisionConflictError) Is(target error) bool { return target == ErrRevisionConflict }
+
 type MissingRecordError struct {
 	Kind string
 	ID   string
