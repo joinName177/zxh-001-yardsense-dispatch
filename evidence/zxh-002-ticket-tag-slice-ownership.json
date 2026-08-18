@@ -1,0 +1,9 @@
+{
+  "bug_id": "zxh-002-ticket-tag-slice-ownership",
+  "category": "slice相关问题",
+  "generator_model": "gpt-5.6-sol",
+  "bug_author_model": "gpt-5.6-sol",
+  "gold_author_model": "gpt-5.6-sol",
+  "verify_cmds": "go test ./internal/store -run '^TestListedTicketTagsCannotMutatePersistedTicket$' -count=1",
+  "preflight": {"bug_base_red_runs": 20, "gold_green_runs": 20}
+}
