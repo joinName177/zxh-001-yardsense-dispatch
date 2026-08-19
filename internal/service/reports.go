@@ -3,6 +3,7 @@ package service
 import (
 	"bytes"
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
@@ -52,6 +53,9 @@ func (s *Service) ImportDocument(document store.Document, operator string) error
 		return err
 	}
 	if err := s.store.Import(document); err != nil {
+		if errors.Is(err, store.ErrInvalidDocument) {
+			return fmt.Errorf("%w: %v", ErrInvalidDocument, err)
+		}
 		return fmt.Errorf("import document: %w", err)
 	}
 	return nil
