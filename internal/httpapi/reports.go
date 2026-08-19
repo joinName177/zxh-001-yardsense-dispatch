@@ -40,7 +40,7 @@ func (s *Server) timeline(writer http.ResponseWriter, request *http.Request) {
 }
 
 func (s *Server) exportCSV(writer http.ResponseWriter, request *http.Request) {
-	contents, err := s.service.ExportTicketsCSV()
+	contents, err := s.service.ExportTicketsCSVContext(request.Context())
 	if err != nil {
 		writeError(writer, err)
 		return

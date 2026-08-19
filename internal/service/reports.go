@@ -2,6 +2,7 @@ package service
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"time"
 
@@ -30,8 +31,12 @@ func (s *Service) TicketTimeline(ticketID string) ([]model.TimelineEntry, error)
 }
 
 func (s *Service) ExportTicketsCSV() ([]byte, error) {
+	return s.ExportTicketsCSVContext(context.Background())
+}
+
+func (s *Service) ExportTicketsCSVContext(ctx context.Context) ([]byte, error) {
 	var output bytes.Buffer
-	if err := s.store.ExportTicketsCSV(&output, s.now().UTC()); err != nil {
+	if err := s.store.ExportTicketsCSVContext(ctx, &output, s.now().UTC()); err != nil {
 		return nil, fmt.Errorf("export tickets: %w", err)
 	}
 	return output.Bytes(), nil

@@ -1,0 +1,9 @@
+{
+  "bug_id": "zxh-003-cancelled-export-context",
+  "category": "context相关问题",
+  "generator_model": "gpt-5.6-sol",
+  "bug_author_model": "gpt-5.6-sol",
+  "gold_author_model": "gpt-5.6-sol",
+  "verify_cmds": "go test ./internal/service -run '^TestCancelledTicketExportStopsBeforeWritingCSV$' -count=1",
+  "preflight": {"bug_base_red_runs": 20, "gold_green_runs": 20}
+}

@@ -1,6 +1,7 @@
 package store
 
 import (
+	"context"
 	"encoding/csv"
 	"fmt"
 	"io"
@@ -12,11 +13,16 @@ import (
 )
 
 func (s *JSONStore) ExportTicketsCSV(writer io.Writer, now time.Time) error {
+	return s.ExportTicketsCSVContext(context.Background(), writer, now)
+}
+
+func (s *JSONStore) ExportTicketsCSVContext(ctx context.Context, writer io.Writer, now time.Time) error {
 	csvWriter := csv.NewWriter(writer)
 	if err := csvWriter.Write([]string{"id", "title", "zone", "priority", "status", "assignee", "due_at", "revision", "overdue", "tags"}); err != nil {
 		return fmt.Errorf("write csv header: %w", err)
 	}
 	for _, ticket := range s.ListTickets(model.TicketFilter{}, now) {
+		_ = ctx
 		record := []string{ticket.ID, ticket.Title, ticket.Zone, string(ticket.Priority), string(ticket.Status), ticket.AssigneeID, ticket.DueAt.Format(time.RFC3339), strconv.FormatInt(ticket.Revision, 10), strconv.FormatBool(ticket.IsOverdue(now)), strings.Join(ticket.Tags, ",")}
 		if err := csvWriter.Write(record); err != nil {
 			return fmt.Errorf("write ticket %s: %w", ticket.ID, err)
