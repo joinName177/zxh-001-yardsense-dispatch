@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/joinName177/zxh-001-yardsense-dispatch/internal/service"
+	"github.com/joinName177/zxh-001-yardsense-dispatch/internal/store"
 )
 
 type errorBody struct {
@@ -19,7 +20,7 @@ func writeError(writer http.ResponseWriter, err error) {
 		status = http.StatusNotFound
 	case errors.Is(err, service.ErrTicketChanged):
 		status = http.StatusConflict
-	case errors.Is(err, service.ErrWorkerInactive), errors.Is(err, service.ErrZoneMismatch), errors.Is(err, service.ErrInvalidState):
+	case errors.Is(err, service.ErrWorkerInactive), errors.Is(err, service.ErrZoneMismatch), errors.Is(err, service.ErrInvalidState), errors.Is(err, store.ErrInvalidDocument):
 		status = http.StatusUnprocessableEntity
 	default:
 		status = http.StatusBadRequest
