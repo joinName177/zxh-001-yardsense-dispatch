@@ -58,6 +58,7 @@ func (s *JSONStore) persistLocked() error {
 		return fmt.Errorf("write temporary document: %w", err)
 	}
 	if err := os.Rename(temporary, s.path); err != nil {
+		os.Remove(temporary)
 		return fmt.Errorf("replace document: %w", err)
 	}
 	return nil

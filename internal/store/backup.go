@@ -35,6 +35,7 @@ func (s *JSONStore) backupAt(directory string, stamp time.Time) (Backup, error) 
 		return Backup{}, fmt.Errorf("write backup: %w", err)
 	}
 	if err := os.Rename(temporary, path); err != nil {
+		os.Remove(temporary)
 		return Backup{}, fmt.Errorf("publish backup: %w", err)
 	}
 	info, err := os.Stat(path)
