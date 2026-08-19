@@ -43,3 +43,18 @@ func TestAssignReturnsConflictWhenTicketWasUpdated(t *testing.T) {
 		t.Fatalf("stale dispatcher update returned %d, want %d; body=%s", response.Code, http.StatusConflict, response.Body.String())
 	}
 }
+
+func TestImportInvalidSnapshotReturnsUnprocessableEntity(t *testing.T) {
+	database, err := store.Open(filepath.Join(t.TempDir(), "yardsense.json"))
+	if err != nil {
+		t.Fatalf("open store: %v", err)
+	}
+	application := service.New(database, time.Now)
+	request := httptest.NewRequest(http.MethodPost, "/api/import/document", bytes.NewBufferString(`{"version":1,"tickets":null,"workers":{},"notes":{}}`))
+	request.Header.Set("X-Operator", "dispatcher")
+	response := httptest.NewRecorder()
+	New(application).ServeHTTP(response, request)
+	if response.Code != http.StatusUnprocessableEntity {
+		t.Fatalf("invalid snapshot returned %d, want %d; body=%s", response.Code, http.StatusUnprocessableEntity, response.Body.String())
+	}
+}
