@@ -14,13 +14,14 @@ type Clock func() time.Time
 type Service struct {
 	store *store.JSONStore
 	now   Clock
+	ids   *ticketIDAllocator
 }
 
 func New(data *store.JSONStore, now Clock) *Service {
 	if now == nil {
 		now = time.Now
 	}
-	return &Service{store: data, now: now}
+	return &Service{store: data, now: now, ids: newTicketIDAllocator()}
 }
 
 type CreateTicketInput struct {
@@ -39,7 +40,7 @@ func (s *Service) CreateTicket(input CreateTicketInput) (model.Ticket, error) {
 		return model.Ticket{}, err
 	}
 	ticket := model.Ticket{
-		ID:    generatedID("ticket", now, len(s.store.ListTickets(model.TicketFilter{}, now))+1),
+		ID:    s.ids.Next(now),
 		Title: input.Title, Description: input.Description, Zone: input.Zone, Priority: input.Priority,
 		Status: model.StatusOpen, DueAt: input.DueAt.UTC(), CreatedAt: now, UpdatedAt: now, Revision: 1, Tags: model.NormalizeTags(input.Tags),
 	}
