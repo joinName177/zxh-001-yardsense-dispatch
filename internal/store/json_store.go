@@ -54,6 +54,7 @@ func (s *JSONStore) persistLocked() error {
 		return fmt.Errorf("create data directory: %w", err)
 	}
 	temporary := s.path + ".tmp"
+	defer func() { _ = cleanupStagedFile(temporary) }()
 	if err := os.WriteFile(temporary, data, 0o600); err != nil {
 		return fmt.Errorf("write temporary document: %w", err)
 	}

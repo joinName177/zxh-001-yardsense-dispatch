@@ -3,6 +3,7 @@ package store
 import (
 	"errors"
 	"fmt"
+	"os"
 )
 
 var (
@@ -11,6 +12,15 @@ var (
 	ErrRevisionConflict = errors.New("ticket revision conflict")
 	ErrInvalidDocument  = errors.New("invalid persisted document")
 )
+
+// cleanupStagedFile makes cleanup safe when a write failed before staging a file.
+func cleanupStagedFile(path string) error {
+	err := os.Remove(path)
+	if errors.Is(err, os.ErrNotExist) {
+		return nil
+	}
+	return err
+}
 
 type RevisionConflictError struct {
 	TicketID string

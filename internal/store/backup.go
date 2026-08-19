@@ -31,6 +31,7 @@ func (s *JSONStore) backupAt(directory string, stamp time.Time) (Backup, error) 
 		return Backup{}, fmt.Errorf("encode backup: %w", err)
 	}
 	temporary := path + ".partial"
+	defer func() { _ = cleanupStagedFile(temporary) }()
 	if err := os.WriteFile(temporary, data, 0o600); err != nil {
 		return Backup{}, fmt.Errorf("write backup: %w", err)
 	}
