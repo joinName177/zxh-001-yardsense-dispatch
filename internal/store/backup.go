@@ -17,18 +17,25 @@ type Backup struct {
 }
 
 func (s *JSONStore) Backup(directory string) (Backup, error) {
+	return s.backupAt(directory, time.Now().UTC())
+}
+
+func (s *JSONStore) backupAt(directory string, stamp time.Time) (Backup, error) {
 	if err := os.MkdirAll(directory, 0o755); err != nil {
 		return Backup{}, fmt.Errorf("create backup directory: %w", err)
 	}
-	stamp := time.Now().UTC()
 	name := "yardsense-" + stamp.Format("20060102T150405.000000000Z") + ".json"
 	path := filepath.Join(directory, name)
 	data, err := json.MarshalIndent(s.Snapshot(), "", "  ")
 	if err != nil {
 		return Backup{}, fmt.Errorf("encode backup: %w", err)
 	}
-	if err := os.WriteFile(path, data, 0o600); err != nil {
+	temporary := path + ".partial"
+	if err := os.WriteFile(temporary, data, 0o600); err != nil {
 		return Backup{}, fmt.Errorf("write backup: %w", err)
+	}
+	if err := os.Rename(temporary, path); err != nil {
+		return Backup{}, fmt.Errorf("publish backup: %w", err)
 	}
 	info, err := os.Stat(path)
 	if err != nil {
