@@ -35,6 +35,9 @@ func (s *Service) ExportTicketsCSV() ([]byte, error) {
 }
 
 func (s *Service) ExportTicketsCSVContext(ctx context.Context) ([]byte, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, fmt.Errorf("cancel ticket export: %w", err)
+	}
 	var output bytes.Buffer
 	if err := s.store.ExportTicketsCSVContext(ctx, &output, s.now().UTC()); err != nil {
 		return nil, fmt.Errorf("export tickets: %w", err)
